@@ -4,13 +4,26 @@ import { colors, spacing, borderRadius } from '../theme';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.background,
+    backgroundColor: '#fff',
   },
   content: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-    padding: spacing.large,
+    alignItems: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 18,
+    color: '#fff',
+    textAlign: 'center',
+    marginBottom: 40,
   },
   image: {
     width: 300,

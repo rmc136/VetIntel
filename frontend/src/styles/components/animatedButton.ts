@@ -1,5 +1,4 @@
 import { StyleSheet, Platform } from 'react-native';
-import { spacing, borderRadius } from '../theme';
 
 export const styles = StyleSheet.create({
   buttonContainer: {
@@ -17,25 +16,25 @@ export const styles = StyleSheet.create({
         elevation: 8,
       },
     }),
-    borderRadius: borderRadius.large,
+    borderRadius: 16,
     alignSelf: 'center',
   },
   touchable: {
     minWidth: 200,
-    borderRadius: borderRadius.large,
+    borderRadius: 16,
     overflow: 'hidden',
   },
   gradient: {
-    paddingHorizontal: spacing.xlarge,
-    paddingVertical: spacing.medium,
-    borderRadius: borderRadius.large,
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
   gradientOverlay: {
     position: 'absolute',
     top: 0,
-    left: '-100%',
+    left: -100,
     right: 0,
     bottom: 0,
     width: '200%',

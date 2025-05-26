@@ -1,22 +1,24 @@
-import 'react-native-gesture-handler';
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { DrawerNavigator } from './src/navigation/DrawerNavigator';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { HomeScreen } from './src/screens/HomeScreen';
+import { DiagnosisScreen } from './src/screens/DiagnosisScreen';
+import { WelcomeScreen } from './src/screens/WelcomeScreen';
 
 export default function App() {
+  const [currentScreen, setCurrentScreen] = useState('welcome');
+
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <NavigationContainer>
-        <DrawerNavigator />
-      </NavigationContainer>
-    </GestureHandlerRootView>
+    <View style={styles.container}>
+      {currentScreen === 'welcome' && <WelcomeScreen onStart={() => setCurrentScreen('home')} />}
+      {currentScreen === 'home' && <HomeScreen onDiagnosis={() => setCurrentScreen('diagnosis')} />}
+      {currentScreen === 'diagnosis' && <DiagnosisScreen onBack={() => setCurrentScreen('home')} />}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
 });

@@ -1,54 +1,17 @@
-import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet } from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export const AnimatedBackground: React.FC = () => {
-  const colorAnimation = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(colorAnimation, {
-          toValue: 1,
-          duration: 5000,
-          useNativeDriver: false,
-        }),
-        Animated.timing(colorAnimation, {
-          toValue: 2,
-          duration: 5000,
-          useNativeDriver: false,
-        }),
-        Animated.timing(colorAnimation, {
-          toValue: 3,
-          duration: 5000,
-          useNativeDriver: false,
-        }),
-        Animated.timing(colorAnimation, {
-          toValue: 0,
-          duration: 5000,
-          useNativeDriver: false,
-        }),
-      ])
-    ).start();
-  }, []);
-
-  const backgroundColor = colorAnimation.interpolate({
-    inputRange: [0, 1, 2, 3],
-    outputRange: [
-      'rgba(0, 0, 0, 0.9)',     // Deep black
-      'rgba(32, 32, 32, 0.9)',  // Dark grey
-      'rgba(64, 64, 64, 0.9)',  // Medium grey
-      'rgba(96, 96, 96, 0.9)',  // Light grey
-    ],
-  });
-
   return (
-    <Animated.View style={[styles.container, { backgroundColor }]}>
+    <View style={styles.container}>
       <LinearGradient
-        colors={['rgba(0, 0, 0, 0.8)', 'rgba(32, 32, 32, 0.8)']}
-        style={StyleSheet.absoluteFill}
+        colors={['#1a1a1a', '#2d2d2d']}
+        style={styles.gradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
       />
-    </Animated.View>
+    </View>
   );
 };
 
@@ -56,5 +19,8 @@ const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
     overflow: 'hidden',
+  },
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
   },
 }); 

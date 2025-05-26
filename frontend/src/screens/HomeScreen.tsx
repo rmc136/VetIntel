@@ -1,82 +1,25 @@
-import React, { useState } from 'react';
-import { View, Image, Text } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import axios from 'axios';
-import { AnimatedButton } from '../components/AnimatedButton';
+import React from 'react';
+import { View, Text } from 'react-native';
 import { AnimatedBackground } from '../components/AnimatedBackground';
+import { AnimatedButton } from '../components/AnimatedButton';
 import { styles } from '../styles/screens/homeScreen';
 
-export const HomeScreen = () => {
-  const [image, setImage] = useState<ImagePicker.ImagePickerAsset | null>(null);
-  const [result, setResult] = useState(null);
+interface HomeScreenProps {
+  onDiagnosis: () => void;
+}
 
-  const pickImage = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) return;
-
-    const result = await ImagePicker.launchImageLibraryAsync({ base64: false });
-    if (!result.canceled) {
-      setImage(result.assets[0]);
-      console.log('Image selected:', result.assets[0]);
-    }
-  };
-
-  const sendToAPI = async () => {
-    try {
-      console.log('Starting diagnosis...');
-      if (!image) {
-        console.error('No image selected');
-        return;
-      }
-      
-      console.log('Preparing form data with image:', image.uri);
-      const formData = new FormData();
-      formData.append('image', {
-        uri: image.uri,
-        type: 'image/jpeg',
-        name: 'xray.jpg',
-      } as any);
-
-      console.log('Sending request to API...');
-      const res = await axios.post('http://192.168.1.69:8000/api/diagnose/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      
-      console.log('API Response:', res.data);
-      setResult(res.data.result);
-    } catch (error) {
-      console.error('Error during diagnosis:', error);
-      if (axios.isAxiosError(error)) {
-        console.error('API Error details:', error.response?.data);
-      }
-    }
-  };
-
+export const HomeScreen = ({ onDiagnosis }: HomeScreenProps) => {
   return (
     <View style={styles.container}>
       <AnimatedBackground />
       <View style={[styles.content, { zIndex: 1 }]}>
-        <AnimatedButton title="Upload X-ray Image" onPress={pickImage} />
+        <Text style={styles.title}>Welcome to VetIntel</Text>
+        <Text style={styles.subtitle}>Your AI-powered veterinary assistant</Text>
 
-        {image && (
-          <>
-            <Image source={{ uri: image.uri }} style={styles.image} />
-            <AnimatedButton title="Diagnose" onPress={sendToAPI} />
-          </>
-        )}
-
-        {result && (
-          <View style={styles.resultContainer}>
-            <Text style={[styles.resultText, { 
-              color: '#FFFFFF',
-              fontFamily: 'System',
-              fontSize: 18,
-              fontWeight: '500'
-            }]}>
-              Diagnosis: {result}
-            </Text>
-          </View>
-        )}
+        <AnimatedButton 
+          title="Start Diagnosis" 
+          onPress={onDiagnosis}
+        />
       </View>
     </View>
   );

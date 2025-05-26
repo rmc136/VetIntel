@@ -3,27 +3,32 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   content: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1,
+    alignItems: 'center',
     padding: 20,
+    gap: 20,
   },
   image: {
     width: 300,
     height: 300,
     marginVertical: 20,
-    borderRadius: 10,
+    borderRadius: 8,
   },
   resultContainer: {
-    marginTop: 20,
-    padding: 15,
-    borderRadius: 10,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 20,
+    borderRadius: 8,
+    marginTop: 20,
+    width: '100%',
+    alignItems: 'center',
   },
   resultText: {
-    textAlign: 'center',
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '500',
   },
 }); 

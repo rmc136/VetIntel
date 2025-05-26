@@ -6,7 +6,11 @@ import { AnimatedButton } from '../components/AnimatedButton';
 import { AnimatedBackground } from '../components/AnimatedBackground';
 import { styles } from '../styles/screens/diagnosisScreen';
 
-export const DiagnosisScreen = () => {
+interface DiagnosisScreenProps {
+  onBack: () => void;
+}
+
+export const DiagnosisScreen = ({ onBack }: DiagnosisScreenProps) => {
   const [image, setImage] = useState<ImagePicker.ImagePickerAsset | null>(null);
   const [result, setResult] = useState(null);
 
@@ -56,6 +60,7 @@ export const DiagnosisScreen = () => {
     <View style={styles.container}>
       <AnimatedBackground />
       <View style={[styles.content, { zIndex: 1 }]}>
+        <AnimatedButton title="Back" onPress={onBack} />
         <AnimatedButton title="Upload X-ray Image" onPress={pickImage} />
 
         {image && (
