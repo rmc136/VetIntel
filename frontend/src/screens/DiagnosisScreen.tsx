@@ -5,14 +5,16 @@ import axios from 'axios';
 import { AnimatedButton } from '../components/AnimatedButton';
 import { AnimatedBackground } from '../components/AnimatedBackground';
 import { styles } from '../styles/screens/diagnosisScreen';
+import { useNavigation } from '@react-navigation/native';
 
 interface DiagnosisScreenProps {
-  onBack: () => void;
+  type: 'xray' | 'ultrasound' | 'mri' | 'ct' | 'endoscopy' | 'dental';
 }
 
-export const DiagnosisScreen = ({ onBack }: DiagnosisScreenProps) => {
+export const DiagnosisScreen: React.FC<DiagnosisScreenProps> = ({ type }) => {
   const [image, setImage] = useState<ImagePicker.ImagePickerAsset | null>(null);
-  const [result, setResult] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigation = useNavigation<any>();
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -27,6 +29,7 @@ export const DiagnosisScreen = ({ onBack }: DiagnosisScreenProps) => {
 
   const sendToAPI = async () => {
     try {
+      setIsLoading(true);
       console.log('Starting diagnosis...');
       if (!image) {
         console.error('No image selected');
@@ -42,17 +45,33 @@ export const DiagnosisScreen = ({ onBack }: DiagnosisScreenProps) => {
       } as any);
 
       console.log('Sending request to API...');
-      const res = await axios.post('http://192.168.1.69:8000/api/diagnose/', formData, {
+      const response = await axios.post('http://192.168.1.69:8000/api/diagnose/', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       
-      console.log('API Response:', res.data);
-      setResult(res.data.result);
+      console.log('API Response:', response.data);
+      
+      // Add the base URL to the image path
+      const diagnosisData = {
+        ...response.data,
+        image: `http://192.168.1.69:8000${response.data.image}`
+      };
+      
+      // Clear the image and navigate to diagnosis details
+      setImage(null);
+      navigation.navigate('History', {
+        screen: 'DiagnosisDetails',
+        initial: false,
+        params: { diagnosis: diagnosisData }
+      });
+      
     } catch (error) {
       console.error('Error during diagnosis:', error);
       if (axios.isAxiosError(error)) {
         console.error('API Error details:', error.response?.data);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -60,27 +79,17 @@ export const DiagnosisScreen = ({ onBack }: DiagnosisScreenProps) => {
     <View style={styles.container}>
       <AnimatedBackground />
       <View style={[styles.content, { zIndex: 1 }]}>
-        <AnimatedButton title="Back" onPress={onBack} />
-        <AnimatedButton title="Upload X-ray Image" onPress={pickImage} />
+        <AnimatedButton title="Upload Image" onPress={pickImage} />
 
         {image && (
           <>
             <Image source={{ uri: image.uri }} style={styles.image} />
-            <AnimatedButton title="Diagnose" onPress={sendToAPI} />
+            <AnimatedButton 
+              title={isLoading ? "Diagnosing..." : "Diagnose"} 
+              onPress={sendToAPI}
+              disabled={isLoading}
+            />
           </>
-        )}
-
-        {result && (
-          <View style={styles.resultContainer}>
-            <Text style={[styles.resultText, { 
-              color: '#FFFFFF',
-              fontFamily: 'System',
-              fontSize: 18,
-              fontWeight: '500'
-            }]}>
-              Diagnosis: {result}
-            </Text>
-          </View>
         )}
       </View>
     </View>

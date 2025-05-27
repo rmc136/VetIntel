@@ -3,12 +3,11 @@ import { View, Image } from 'react-native';
 import { AnimatedButton } from '../components/AnimatedButton';
 import { AnimatedBackground } from '../components/AnimatedBackground';
 import { styles } from '../styles/screens/welcomeScreen';
+import { useNavigation } from '@react-navigation/native';
 
-interface WelcomeScreenProps {
-  onStart: () => void;
-}
+export const WelcomeScreen = () => {
+  const navigation = useNavigation<any>();
 
-export const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
   return (
     <View style={styles.container}>
       <AnimatedBackground />
@@ -20,7 +19,7 @@ export const WelcomeScreen = ({ onStart }: WelcomeScreenProps) => {
         />
         <AnimatedButton 
           title="Start Now" 
-          onPress={onStart}
+          onPress={() => navigation.navigate('Home')}
         />
       </View>
     </View>

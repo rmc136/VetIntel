@@ -19,6 +19,9 @@ export const styles = StyleSheet.create({
     borderRadius: 16,
     alignSelf: 'center',
   },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
   touchable: {
     minWidth: 200,
     borderRadius: 16,
@@ -30,6 +33,9 @@ export const styles = StyleSheet.create({
     borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  gradientDisabled: {
+    opacity: 0.8,
   },
   gradientOverlay: {
     position: 'absolute',
@@ -47,5 +53,8 @@ export const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.2)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 2,
+  },
+  buttonTextDisabled: {
+    opacity: 0.7,
   },
 }); 

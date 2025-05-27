@@ -6,9 +6,10 @@ import { styles } from '../styles/components/animatedButton';
 interface AnimatedButtonProps {
   onPress: () => void;
   title: string;
+  disabled?: boolean;
 }
 
-export const AnimatedButton = ({ onPress, title }: AnimatedButtonProps) => {
+export const AnimatedButton = ({ onPress, title, disabled = false }: AnimatedButtonProps) => {
   const colorAnimation = useRef(new Animated.Value(0)).current;
   const scaleAnimation = useRef(new Animated.Value(1)).current;
 
@@ -46,22 +47,28 @@ export const AnimatedButton = ({ onPress, title }: AnimatedButtonProps) => {
       ]).start(() => animatePulse());
     };
 
-    animateGradient();
-    animatePulse();
-  }, [colorAnimation, scaleAnimation]);
+    if (!disabled) {
+      animateGradient();
+      animatePulse();
+    }
+  }, [colorAnimation, scaleAnimation, disabled]);
 
   const onPressIn = () => {
-    Animated.spring(scaleAnimation, {
-      toValue: 0.95,
-      useNativeDriver: true,
-    }).start();
+    if (!disabled) {
+      Animated.spring(scaleAnimation, {
+        toValue: 0.95,
+        useNativeDriver: true,
+      }).start();
+    }
   };
 
   const onPressOut = () => {
-    Animated.spring(scaleAnimation, {
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
+    if (!disabled) {
+      Animated.spring(scaleAnimation, {
+        toValue: 1,
+        useNativeDriver: true,
+      }).start();
+    }
   };
 
   const translateX = colorAnimation.interpolate({
@@ -70,13 +77,20 @@ export const AnimatedButton = ({ onPress, title }: AnimatedButtonProps) => {
   });
 
   return (
-    <Animated.View style={[styles.buttonContainer, { transform: [{ scale: scaleAnimation }] }]}>
+    <Animated.View 
+      style={[
+        styles.buttonContainer, 
+        { transform: [{ scale: scaleAnimation }] },
+        disabled && styles.buttonDisabled
+      ]}
+    >
       <TouchableOpacity
         style={styles.touchable}
         onPress={onPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
         activeOpacity={1}
+        disabled={disabled}
       >
         <LinearGradient
           colors={[
@@ -89,7 +103,7 @@ export const AnimatedButton = ({ onPress, title }: AnimatedButtonProps) => {
           ]}
           start={{ x: 0, y: 0 }}
           end={{ x: 2, y: 0 }}
-          style={styles.gradient}
+          style={[styles.gradient, disabled && styles.gradientDisabled]}
         >
           <Animated.View
             style={[
@@ -99,7 +113,9 @@ export const AnimatedButton = ({ onPress, title }: AnimatedButtonProps) => {
               },
             ]}
           />
-          <Text style={styles.buttonText}>{title}</Text>
+          <Text style={[styles.buttonText, disabled && styles.buttonTextDisabled]}>
+            {title}
+          </Text>
         </LinearGradient>
       </TouchableOpacity>
     </Animated.View>
