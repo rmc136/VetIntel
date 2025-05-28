@@ -17,6 +17,7 @@ import { useRoute, useNavigation } from '@react-navigation/native';
 interface DiagnosisDetailsParams {
   diagnosis: {
     id: string;
+    ai_analysis: string;
     date: string;
     image: string;
     result: string;
@@ -51,7 +52,7 @@ export const DiagnosisDetailsScreen = () => {
 
         <View style={styles.resultSection}>
           <Text style={styles.resultLabel}>Diagnosis Result:</Text>
-          <Text style={styles.resultText}>{diagnosis.result}</Text>
+          <Text style={styles.resultText}>{diagnosis.ai_analysis}</Text>
         </View>
       </ScrollView>
 

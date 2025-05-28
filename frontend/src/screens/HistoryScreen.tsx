@@ -20,6 +20,7 @@ interface DiagnosisRecord {
   id: string;
   date: string;
   image: string;
+  ai_analysis: string;
   result: string;
   created_at: string;
 }
@@ -40,7 +41,7 @@ export const HistoryScreen = () => {
       setIsLoading(true);
       setError(null);
       console.log('Fetching diagnoses...');
-      const response = await axios.get('http://192.168.1.69:8000/api/diagnoses/');
+      const response = await axios.get('http://192.168.1.69:8000/api/diagnoses/history/');
       console.log('Response:', response.data);
       setHistory(response.data);
     } catch (err) {
@@ -83,7 +84,7 @@ export const HistoryScreen = () => {
         </TouchableOpacity>
         <View style={styles.resultContainer}>
           <Text style={styles.resultLabel}>Diagnosis:</Text>
-          <Text style={styles.resultText}>{item.result}</Text>
+          <Text style={styles.resultText}>{item.ai_analysis}</Text>
         </View>
       </View>
     </TouchableOpacity>

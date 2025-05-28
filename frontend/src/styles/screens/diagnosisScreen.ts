@@ -31,4 +31,11 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
   },
+  screenTitle: {
+    fontSize: 22,
+    fontWeight: '600',
+    color: '#fff',
+    marginBottom: 16,
+    textAlign: 'center',
+  },
 }); 

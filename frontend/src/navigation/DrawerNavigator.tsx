@@ -19,6 +19,7 @@ const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 
 // Create separate screens for each type of diagnosis
+const GeneralDiagnosisScreen = () => <DiagnosisScreen type="general" />;
 const XRayDiagnosisScreen = () => <DiagnosisScreen type="xray" />;
 const UltrasoundDiagnosisScreen = () => <DiagnosisScreen type="ultrasound" />;
 const MRIDiagnosisScreen = () => <DiagnosisScreen type="mri" />;
@@ -34,6 +35,10 @@ const DiagnosisStackNavigator = () => {
         headerShown: false,
       }}
     >
+      <Stack.Screen name="GeneralDiagnosis" 
+        component={GeneralDiagnosisScreen}
+        options={{ title: 'General Diagnosis' }}
+      />
       <Stack.Screen name="XRayDiagnosis" 
         component={XRayDiagnosisScreen}
         options={{ title: 'X-Ray Diagnosis' }}
@@ -67,6 +72,7 @@ const CustomDrawerContent = ({ navigation }: DrawerContentComponentProps) => {
   const [isDiagnosisExpanded, setIsDiagnosisExpanded] = React.useState(false);
 
   const diagnosisOptions = [
+    { name: 'GeneralDiagnosis', title: 'General' },
     { name: 'XRayDiagnosis', title: 'X-Ray' },
     { name: 'UltrasoundDiagnosis', title: 'Ultrasound' },
     { name: 'MRIDiagnosis', title: 'MRI' },

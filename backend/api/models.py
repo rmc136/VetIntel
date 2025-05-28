@@ -1,22 +1,19 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from datetime import datetime
+import os
 
-# Create your models here.
-class Patient(models.Model):
-    name = models.CharField(max_length=100)
-    species = models.CharField(max_length=50)
-    breed = models.CharField(max_length=50, blank=True)
-    age = models.IntegerField(validators=[MinValueValidator(0)])
-    weight = models.FloatField(validators=[MinValueValidator(0)], help_text="Weight in kilograms")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return f"{self.name} ({self.species} - {self.breed})"
+def upload_image_to(instance, filename):
+    folder_name = instance.__class__.__name__.replace('Image', '').lower()
+    date_path = datetime.now().strftime('%Y/%m/%d')
+    ext = filename.split('.')[-1]
+    body_part = instance.body_part.replace(' ', '_') if instance.body_part else 'unknown'
+    filename = f"{body_part}_{datetime.now().strftime('%H%M%S')}.{ext}"
+    return os.path.join('medical_images', folder_name, date_path, filename)
 
 class BaseImage(models.Model):
-    image = models.ImageField(upload_to='medical_images/%(class)s/')
-    body_part = models.CharField(max_length=100)
+    image = models.ImageField(upload_to=upload_image_to)
+    body_part = models.CharField(max_length=100, blank=True)
     notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     diagnosis = models.TextField(blank=True)
@@ -35,6 +32,15 @@ class BaseImage(models.Model):
 
     def __str__(self):
         return f"{self.__class__.__name__} - {self.body_part} ({self.created_at})"
+    
+
+class GeneralImage(BaseImage):
+    pass
+    # add other fields as needed
+
+    def __str__(self):
+        return f"GeneralImage {self.id}"
+
 
 class XRayImage(BaseImage):
     PROJECTION_CHOICES = [

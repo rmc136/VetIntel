@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import (
-    Patient,
     XRayImage,
     UltrasoundImage,
     MRIImage,
@@ -9,17 +8,10 @@ from .models import (
     DentalImage
 )
 
-@admin.register(Patient)
-class PatientAdmin(admin.ModelAdmin):
-    list_display = ('name', 'species', 'breed', 'age', 'weight', 'created_at')
-    list_filter = ('species', 'created_at')
-    search_fields = ('name', 'species', 'breed')
-    ordering = ('-created_at',)
-
 class BaseImageAdmin(admin.ModelAdmin):
-    list_display = ('patient', 'body_part', 'created_at', 'confidence_score')
+    list_display = ('body_part', 'created_at', 'confidence_score')
     list_filter = ('created_at', 'body_part')
-    search_fields = ('patient__name', 'body_part', 'diagnosis')
+    search_fields = ('body_part', 'diagnosis')
     readonly_fields = ('created_at', 'confidence_score')
     ordering = ('-created_at',)
 

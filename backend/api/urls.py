@@ -1,5 +1,8 @@
 from django.urls import path
 from .views import (
+    GeneralImageView,
+    GeneralImageListView,
+    GeneralImageDetailView,
     XRayImageView,
     XRayImageListView,
     XRayImageDetailView,
@@ -18,36 +21,44 @@ from .views import (
     DentalImageView,
     DentalImageListView,
     DentalImageDetailView,
+    DiagnosisHistoryView,
 )
 
 urlpatterns = [
+    # General endpoints
+    path('diagnose/general/upload/', GeneralImageView.as_view(), name='general-upload'),
+    path('diagnose/general/', GeneralImageListView.as_view(), name='general-list'),
+    path('diagnose/general/<int:pk>/', GeneralImageDetailView.as_view(), name='general-detail'),
+
     # X-Ray endpoints
-    path('xrays/upload/', XRayImageView.as_view(), name='xray-upload'),
-    path('xrays/', XRayImageListView.as_view(), name='xray-list'),
-    path('xrays/<int:pk>/', XRayImageDetailView.as_view(), name='xray-detail'),
+    path('diagnose/xray/upload/', XRayImageView.as_view(), name='xray-upload'),
+    path('diagnose/xray/', XRayImageListView.as_view(), name='xray-list'),
+    path('diagnose/xray/<int:pk>/', XRayImageDetailView.as_view(), name='xray-detail'),
 
     # Ultrasound endpoints
-    path('ultrasounds/upload/', UltrasoundImageView.as_view(), name='ultrasound-upload'),
-    path('ultrasounds/', UltrasoundImageListView.as_view(), name='ultrasound-list'),
-    path('ultrasounds/<int:pk>/', UltrasoundImageDetailView.as_view(), name='ultrasound-detail'),
+    path('diagnose/ultrasounds/upload/', UltrasoundImageView.as_view(), name='ultrasound-upload'),
+    path('diagnose/ultrasounds/', UltrasoundImageListView.as_view(), name='ultrasound-list'),
+    path('diagnose/ultrasounds/<int:pk>/', UltrasoundImageDetailView.as_view(), name='ultrasound-detail'),
 
     # MRI endpoints
-    path('mris/upload/', MRIImageView.as_view(), name='mri-upload'),
-    path('mris/', MRIImageListView.as_view(), name='mri-list'),
-    path('mris/<int:pk>/', MRIImageDetailView.as_view(), name='mri-detail'),
+    path('diagnose/mris/upload/', MRIImageView.as_view(), name='mri-upload'),
+    path('diagnose/mris/', MRIImageListView.as_view(), name='mri-list'),
+    path('diagnose/mris/<int:pk>/', MRIImageDetailView.as_view(), name='mri-detail'),
 
     # CT endpoints
-    path('cts/upload/', CTImageView.as_view(), name='ct-upload'),
-    path('cts/', CTImageListView.as_view(), name='ct-list'),
-    path('cts/<int:pk>/', CTImageDetailView.as_view(), name='ct-detail'),
+    path('diagnose/cts/upload/', CTImageView.as_view(), name='ct-upload'),
+    path('diagnose/cts/', CTImageListView.as_view(), name='ct-list'),
+    path('diagnose/cts/<int:pk>/', CTImageDetailView.as_view(), name='ct-detail'),
 
     # Endoscopy endpoints
-    path('endoscopies/upload/', EndoscopyImageView.as_view(), name='endoscopy-upload'),
-    path('endoscopies/', EndoscopyImageListView.as_view(), name='endoscopy-list'),
-    path('endoscopies/<int:pk>/', EndoscopyImageDetailView.as_view(), name='endoscopy-detail'),
+    path('diagnose/endoscopies/upload/', EndoscopyImageView.as_view(), name='endoscopy-upload'),
+    path('diagnose/endoscopies/', EndoscopyImageListView.as_view(), name='endoscopy-list'),
+    path('diagnose/endoscopies/<int:pk>/', EndoscopyImageDetailView.as_view(), name='endoscopy-detail'),
 
     # Dental endpoints
-    path('dentals/upload/', DentalImageView.as_view(), name='dental-upload'),
-    path('dentals/', DentalImageListView.as_view(), name='dental-list'),
-    path('dentals/<int:pk>/', DentalImageDetailView.as_view(), name='dental-detail'),
+    path('diagnose/dentals/upload/', DentalImageView.as_view(), name='dental-upload'),
+    path('diagnose/dentals/', DentalImageListView.as_view(), name='dental-list'),
+    path('diagnose/dentals/<int:pk>/', DentalImageDetailView.as_view(), name='dental-detail'),
+
+    path('diagnoses/history/', DiagnosisHistoryView.as_view(), name='diagnosis-history'),
 ]

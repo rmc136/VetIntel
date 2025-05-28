@@ -16,7 +16,8 @@ export const HomeScreen = () => {
         <Text style={styles.subtitle}>Your AI-powered veterinary assistant</Text>
         <AnimatedButton 
           title="Start Diagnosis" 
-          onPress={() => navigation.navigate('Diagnose')}
+          onPress={() => navigation.navigate('DiagnosisStack', { screen: 'GeneralDiagnosis' })}
+
         />
       </View>
     </View>

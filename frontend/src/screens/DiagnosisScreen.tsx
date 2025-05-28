@@ -8,8 +8,18 @@ import { styles } from '../styles/screens/diagnosisScreen';
 import { useNavigation } from '@react-navigation/native';
 
 interface DiagnosisScreenProps {
-  type: 'xray' | 'ultrasound' | 'mri' | 'ct' | 'endoscopy' | 'dental';
+  type: 'general' | 'xray' | 'ultrasound' | 'mri' | 'ct' | 'endoscopy' | 'dental';
 }
+const typeTitles: Record<DiagnosisScreenProps['type'], string> = {
+  general: 'General Diagnosis',
+  xray: 'X-Ray Diagnosis',
+  ultrasound: 'Ultrasound Diagnosis',
+  mri: 'MRI Diagnosis',
+  ct: 'CT Scan Diagnosis',
+  endoscopy: 'Endoscopy Diagnosis',
+  dental: 'Dental Diagnosis',
+};
+
 
 export const DiagnosisScreen: React.FC<DiagnosisScreenProps> = ({ type }) => {
   const [image, setImage] = useState<ImagePicker.ImagePickerAsset | null>(null);
@@ -26,50 +36,46 @@ export const DiagnosisScreen: React.FC<DiagnosisScreenProps> = ({ type }) => {
       console.log('Image selected:', result.assets[0]);
     }
   };
-
+  const [aiAnalysis, setAiAnalysis] = useState<string | null>(null);
   const sendToAPI = async () => {
     try {
       setIsLoading(true);
-      console.log('Starting diagnosis...');
-      if (!image) {
-        console.error('No image selected');
-        return;
-      }
-      
-      console.log('Preparing form data with image:', image.uri);
+      if (!image) return;
+  
       const formData = new FormData();
       formData.append('image', {
         uri: image.uri,
         type: 'image/jpeg',
-        name: 'xray.jpg',
+        name: `${type}.jpg`,
       } as any);
-
-      console.log('Sending request to API...');
-      const response = await axios.post('http://192.168.1.69:8000/api/diagnose/', formData, {
+  
+      // Construct the endpoint based on the type
+      const endpoint = `http://192.168.1.69:8000/api/diagnose/${type}/upload/`;
+      console.log('Sending to:', endpoint);
+      const response = await axios.post(endpoint, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      
-      console.log('API Response:', response.data);
-      
-      // Add the base URL to the image path
-      const diagnosisData = {
-        ...response.data,
-        image: `http://192.168.1.69:8000${response.data.image}`
-      };
-      
-      // Clear the image and navigate to diagnosis details
-      setImage(null);
-      navigation.navigate('History', {
-        screen: 'DiagnosisDetails',
-        initial: false,
-        params: { diagnosis: diagnosisData }
-      });
-      
-    } catch (error) {
-      console.error('Error during diagnosis:', error);
-      if (axios.isAxiosError(error)) {
-        console.error('API Error details:', error.response?.data);
+  
+      console.log('Response from server:', response.data);
+
+    // Store AI analysis text from the response
+      if (response.data) {
+        // Navigate to DiagnosisDetailsScreen and pass diagnosis data
+        navigation.navigate('History', {
+          screen: 'DiagnosisDetails',
+          params: {
+            diagnosis: {
+              id: response.data.id,
+              date: response.data.created_at,
+              image: response.data.image_url || response.data.image,
+              ai_analysis: response.data.ai_analysis || "No analysis available",
+              created_at: response.data.created_at,
+            },
+          },
+        });
       }
+    } catch (error) {
+      // error handling...
     } finally {
       setIsLoading(false);
     }
@@ -79,13 +85,15 @@ export const DiagnosisScreen: React.FC<DiagnosisScreenProps> = ({ type }) => {
     <View style={styles.container}>
       <AnimatedBackground />
       <View style={[styles.content, { zIndex: 1 }]}>
+        <Text style={styles.screenTitle}>{typeTitles[type]}</Text>
         <AnimatedButton title="Upload Image" onPress={pickImage} />
-
+  
         {image && (
           <>
             <Image source={{ uri: image.uri }} style={styles.image} />
-            <AnimatedButton 
-              title={isLoading ? "Diagnosing..." : "Diagnose"} 
+  
+            <AnimatedButton
+              title={isLoading ? "Diagnosing..." : "Diagnose"}
               onPress={sendToAPI}
               disabled={isLoading}
             />
@@ -94,4 +102,4 @@ export const DiagnosisScreen: React.FC<DiagnosisScreenProps> = ({ type }) => {
       </View>
     </View>
   );
-}; 
+};
